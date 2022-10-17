@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import validationSchema from "../validation/validationSchema";
-import { SafeAreaView, TextInput, Text, TouchableHighlight } from "react-native";
+import { SafeAreaView, TextInput, Text, TouchableHighlight, ActivityIndicator, Pressable } from "react-native";
 import { styles } from "../styles/styles";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { initializeApp } from "firebase/app";
@@ -10,7 +10,22 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 
 const Form = () => {
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState()
+
+  //handle user state change
+  const stateChange = (user) => {
+    setUser(user)
+    if (initializing) setInitializing(false)
+  }
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(stateChange);
+    return subscriber //unsubscribe on unmount
+  }, [])
+
   const [isNewUser, setIsNewUser] = useState(false)
+
   const handleRegister = (values) => {
     console.log(JSON.stringify(values, null, 2));
     createUserWithEmailAndPassword(auth, values.email, values.pass)
@@ -23,8 +38,21 @@ const Form = () => {
       .then(userCredentials => console.log(userCredentials))
       .catch(err => console.log(err));
   }
+  const logout = () => {
+    auth.signOut().then(info => console.log(info))
 
-  return (
+  }
+  if (initializing) return <ActivityIndicator />
+  if (user) return (
+    <>
+      <Text>Hola {user.email}</Text>
+      <Pressable onPress={logout}>
+        <Text>chauchis</Text>
+      </Pressable>
+    </>
+  )
+
+  return !user && (
     <Formik
       initialValues={{ email: '', pass: '' }}
       validationSchema={validationSchema}
