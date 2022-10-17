@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-const validationSchema = yup.object().shape({
+export const loginValidationSchema = yup.object().shape({
   email: yup
     .string()
     .email("escriba un email válido")
@@ -11,5 +11,10 @@ const validationSchema = yup.object().shape({
     .required('La contraseña es obligatoria')
     .matches(/\S/, 'La contraseña solo puede contener caracteres romanos.'),
 })
+export const forgotValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email("escriba un email válido")
+    .required("el email es obligatorio")
+})
 
-export default validationSchema

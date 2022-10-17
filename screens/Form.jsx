@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
-import validationSchema from "../validation/validationSchema";
+import { loginValidationSchema } from "../validation/validationSchema";
 import { SafeAreaView, TextInput, Text, TouchableHighlight } from "react-native";
 import { styles } from "../styles/styles";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
@@ -31,7 +31,7 @@ const Form = () => {
   return (
     <Formik
       initialValues={{ email: '', pass: '' }}
-      validationSchema={validationSchema}
+      validationSchema={loginValidationSchema}
       onSubmit={values => { isNewUser ? handleRegister(values) : handleLogin(values) }}
     >
       {({
