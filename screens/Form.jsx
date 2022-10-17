@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
+import { NavigationHelpersContext, useNavigation } from "@react-navigation/native";
 import { Formik } from "formik";
 import { loginValidationSchema } from "../validation/validationSchema";
 import { SafeAreaView, TextInput, Text, TouchableHighlight } from "react-native";
@@ -11,6 +11,21 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 
 const Form = () => {
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState()
+
+  //handle user state change
+  const stateChange = (user) => {
+    setUser(user)
+    if (initializing) setInitializing(false)
+  }
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(stateChange);
+    return subscriber //unsubscribe on unmount
+  }, [])
+
+
   const navigation = useNavigation()
   const [isNewUser, setIsNewUser] = useState(false)
 
@@ -24,7 +39,7 @@ const Form = () => {
   const handleLogin = (values) => {
     console.log(JSON.stringify(values, null, 2));
     signInWithEmailAndPassword(auth, values.email, values.pass)
-      .then(userCredentials => console.log(userCredentials))
+      .then(userCredentials => navigation.navigate("Home"))
       .catch(err => console.log(err));
   }
 
