@@ -18,15 +18,31 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   button: {
-    backgroundColor: 'lightblue',
     borderRadius: 10,
     marginTop: 25,
     padding: 10,
     alignItems: 'center',
     width: 250,
   },
+  bgPowderBlue: {
+    backgroundColor: 'powderblue',
+  },
+  bgMistyRose: {
+    backgroundColor: 'mistyrose'
+  },
+  bgBurlywood: {
+    backgroundColor: 'burlywood'
+  },
+  bgRebeccaPurple: {
+    backgroundColor: 'rebeccapurple'
+  },
+
+  textLight: {
+    color: 'snow'
+  },
+
   buttonText: {
-    fontSize: 18
+    fontSize: 18,
   },
 
   error: {
