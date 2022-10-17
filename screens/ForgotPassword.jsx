@@ -4,12 +4,11 @@ import { Formik } from "formik";
 import { forgotValidationSchema } from "../validation/validationSchema";
 import { SafeAreaView, TextInput, Text, TouchableHighlight, Alert } from "react-native";
 import { styles } from "../styles/styles";
-import { confirmPasswordReset, getAuth, sendPasswordResetEmail } from "firebase/auth"
+import { getAuth, sendPasswordResetEmail } from "firebase/auth"
 const auth = getAuth()
 
 const ForgotPassword = () => {
   const navigation = useNavigation()
-
   const handleReset = async (values) => {
     try {
       await sendPasswordResetEmail(auth, values.email, null)

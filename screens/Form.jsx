@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import validationSchema from "../validation/validationSchema";
-import { SafeAreaView, TextInput, Text, TouchableHighlight, ActivityIndicator, Pressable } from "react-native";
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from "@react-navigation/native";
+import { loginValidationSchema } from "../validation/validationSchema";
+import { SafeAreaView, View, TextInput, Text, TouchableHighlight, ActivityIndicator, Pressable } from "react-native";
 import { styles } from "../styles/styles";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { initializeApp } from "firebase/app";
@@ -10,6 +12,8 @@ const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 
 const Form = () => {
+  const navigation = useNavigation()
+  const [isVisible, setIsVisible] = useState(true)
   const [initializing, setInitializing] = useState(true)
   const [user, setUser] = useState()
 
@@ -35,7 +39,7 @@ const Form = () => {
   const handleLogin = (values) => {
     console.log(JSON.stringify(values, null, 2));
     signInWithEmailAndPassword(auth, values.email, values.pass)
-      .then(userCredentials => navigation.navigate("Home"))
+      .then(userCredentials => console.log(userCredentials))
       .catch(err => console.log(err));
   }
   const logout = () => {
@@ -63,23 +67,35 @@ const Form = () => {
       }) => (
         <SafeAreaView style={styles.container}>
           {errors.email && touched.email && (<Text style={styles.error}>{errors.email}</Text>)}
-          <TextInput
-            style={styles.input}
-            placeholder='email...'
-            placeholderTextColor={'darkslategray'}
-            onChangeText={handleChange('email')}
-            name="email"
-            value={values.email}
-          />
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              placeholder='email...'
+              placeholderTextColor={'darkslategray'}
+              onChangeText={handleChange('email')}
+              name="email"
+              value={values.email}
+              textAlignVertical='bottom'
+            />
+            <Ionicons name="mail-outline" size={24} color="black" />
+
+          </View>
           {errors.pass && touched.pass && (<Text style={styles.error}>{errors.pass}</Text>)}
-          <TextInput
-            style={styles.input}
-            placeholder="password..."
-            placeholderTextColor={'darkslategray'}
-            onChangeText={handleChange('pass')}
-            name="pass"
-            value={values.pass}
-          />
+          <View style={styles.inputWithIcon}>
+            <TextInput
+              style={styles.input}
+              placeholder="password..."
+              placeholderTextColor={'darkslategray'}
+              onChangeText={handleChange('pass')}
+              name="pass"
+              value={values.pass}
+              secureTextEntry={isVisible}
+              textAlignVertical='bottom'
+            />
+            <Pressable onPress={() => setIsVisible(!isVisible)}>
+              <Ionicons name={isVisible ? "eye-outline" : "eye-off-outline"} size={24} color="black" style={{ alignSelf: 'center' }} />
+            </Pressable>
+          </View>
           <TouchableHighlight onPress={handleSubmit} style={isNewUser ? [styles.button, styles.bgMistyRose] : [styles.button, styles.bgPowderBlue]}>
             {isNewUser ?
               <Text style={[styles.buttonText]}>Register</Text>
@@ -105,8 +121,9 @@ const Form = () => {
 
         </SafeAreaView>
 
-      )}
-    </Formik>
+      )
+      }
+    </Formik >
   )
 }
 

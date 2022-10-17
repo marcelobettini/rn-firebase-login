@@ -8,14 +8,19 @@ export const styles = StyleSheet.create({
   },
   input: {
     width: 200,
-    marginBottom: 50,
+    marginBottom: 20,
     fontSize: 18,
     width: 250,
     height: 50,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'black',
-    paddingHorizontal: 5,
+    borderBottomWidth: 1,
+    marginEnd: -25,
+  },
+  inputWithIcon: {
+    width: 350,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
+
   },
   button: {
     borderRadius: 10,
