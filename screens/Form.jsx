@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { NavigationHelpersContext, useNavigation } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
-import { loginValidationSchema } from "../validation/validationSchema";
-import { SafeAreaView, TextInput, Text, TouchableHighlight } from "react-native";
+import validationSchema from "../validation/validationSchema";
+import { SafeAreaView, TextInput, Text, TouchableHighlight, ActivityIndicator, Pressable } from "react-native";
 import { styles } from "../styles/styles";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { initializeApp } from "firebase/app";
@@ -25,11 +24,8 @@ const Form = () => {
     return subscriber //unsubscribe on unmount
   }, [])
 
-
-  const navigation = useNavigation()
   const [isNewUser, setIsNewUser] = useState(false)
 
-  //email and password
   const handleRegister = (values) => {
     console.log(JSON.stringify(values, null, 2));
     createUserWithEmailAndPassword(auth, values.email, values.pass)
@@ -42,8 +38,21 @@ const Form = () => {
       .then(userCredentials => navigation.navigate("Home"))
       .catch(err => console.log(err));
   }
+  const logout = () => {
+    auth.signOut().then(info => console.log(info))
 
-  return (
+  }
+  if (initializing) return <ActivityIndicator />
+  if (user) return (
+    <>
+      <Text>Hola {user.email}</Text>
+      <Pressable onPress={logout}>
+        <Text>chauchis</Text>
+      </Pressable>
+    </>
+  )
+
+  return !user && (
     <Formik
       initialValues={{ email: '', pass: '' }}
       validationSchema={loginValidationSchema}
