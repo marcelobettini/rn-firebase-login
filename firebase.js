@@ -1,9 +1,8 @@
 export const firebaseConfig = {
-  apiKey: "AIzaSyBpsdbzq8GNaA2eoD4JUfaaUFZMVie0Jfk",
-  authDomain: "rn-auth-7e54a.firebaseapp.com",
-  projectId: "rn-auth-7e54a",
-  storageBucket: "rn-auth-7e54a.appspot.com",
-  messagingSenderId: "375611309451",
-  appId: "1:375611309451:web:9a42ba53edb2751110038e",
-  measurementId: "G-9DHRBSFQ47"
+  apiKey: "AIzaSyCfgWpHlpYdf3ASYrjNE8x6cnfe0QpS6VY",
+  authDomain: "rn-auth-f5d77.firebaseapp.com",
+  projectId: "rn-auth-f5d77",
+  storageBucket: "rn-auth-f5d77.appspot.com",
+  messagingSenderId: "845562578473",
+  appId: "1:845562578473:web:1477fdbe4e345d54bbbe38"
 };

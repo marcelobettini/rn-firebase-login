@@ -12,9 +12,9 @@ const ForgotPassword = () => {
   const handleReset = async (values) => {
     try {
       await sendPasswordResetEmail(auth, values.email, null)
-      Alert.alert("email sent to", values.email)
+      console.log(values.email)
     } catch (err) {
-      Alert.alert(err)
+      console.log(err)
     }
 
   }
