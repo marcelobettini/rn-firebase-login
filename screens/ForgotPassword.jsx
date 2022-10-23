@@ -8,18 +8,14 @@ import { getAuth, sendPasswordResetEmail } from "firebase/auth"
 const auth = getAuth()
 
 const ForgotPassword = () => {
+
   const navigation = useNavigation()
-  const handleReset = async (values) => {
-    try {
-      await sendPasswordResetEmail(auth, values.email, null)
-      console.log(values.email)
-    } catch (err) {
-      console.log(err)
-    }
+  function handleReset(values) {
 
+    sendPasswordResetEmail(auth, values.email)
+      .then(() => Alert.alert(`Enviamos un mensaje a ${values.email}`))
+      .catch((err) => console.log(err))
   }
-
-
 
   return (
     <Formik

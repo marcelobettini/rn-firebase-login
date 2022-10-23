@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Formik } from "formik";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
@@ -8,18 +9,20 @@ import { styles } from "../styles/styles";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "../firebase";
+import UserCtx from "../userCtx";
 const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 
 const Form = () => {
+  const { user, setUser } = useContext(UserCtx)
   const navigation = useNavigation()
   const [isVisible, setIsVisible] = useState(true)
   const [initializing, setInitializing] = useState(true)
-  const [user, setUser] = useState()
+
 
   //handle user state change
   const stateChange = (user) => {
-    setUser(user)
+    setUser((prev) => prev = user)
     if (initializing) setInitializing(false)
   }
 
@@ -33,30 +36,38 @@ const Form = () => {
   const handleRegister = (values) => {
     console.log(JSON.stringify(values, null, 2));
     createUserWithEmailAndPassword(auth, values.email, values.pass)
-      .then(userCredentials => console.log(userCredentials))
+      .then(userCredentials => {
+        console.log(userCredentials)
+        storeUser(values.email)
+        setUser(prev => ({ ...prev, email: values.email }))
+      })
       .catch(err => console.log(err));
   }
   const handleLogin = (values) => {
     console.log(JSON.stringify(values, null, 2));
     signInWithEmailAndPassword(auth, values.email, values.pass)
-      .then(userCredentials => console.log(userCredentials))
+      .then(userCredentials => {
+        console.log(userCredentials)
+        setUser(prev => ({ ...prev, email: values.email }))
+        storeUser(values.email)
+      })
       .catch(err => console.log(err));
   }
-  const logout = () => {
-    auth.signOut().then(info => console.log(info))
 
+  const storeUser = async (user) => {
+    console.log(`mostramos el user en storeUser: ${user}`);
+    try {
+      const userEmail = JSON.stringify(user)
+      await AsyncStorage.setItem('email', userEmail)
+    } catch (err) {
+      console.log(err);
+
+    }
   }
-  if (initializing) return <ActivityIndicator />
-  if (user) return (
-    <>
-      <Text>Hola {user.email}</Text>
-      <Pressable onPress={logout}>
-        <Text>chauchis</Text>
-      </Pressable>
-    </>
-  )
 
-  return !user && (
+  if (initializing) return <ActivityIndicator />
+  return (
+
     <Formik
       initialValues={{ email: '', pass: '' }}
       validationSchema={loginValidationSchema}
